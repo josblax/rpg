@@ -7,6 +7,16 @@ enum ActionKind {
     Frente,
     Arriba
 }
+namespace SpriteKind {
+    export const Objeto = SpriteKind.create()
+}
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+    projectile.destroy()
+    info.changeLifeBy(-1)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Objeto, function (sprite, otherSprite) {
+    game.over(true)
+})
 let projectile: Sprite = null
 tiles.setTilemap(tilemap`level2`)
 let hero = sprites.create(img`
@@ -27,6 +37,25 @@ let hero = sprites.create(img`
     . . . . . f f f f f f . . . . . 
     . . . . . f f . . f f . . . . . 
     `, SpriteKind.Player)
+let cofre = sprites.create(img`
+    . . b b b b b b b b b b b b . . 
+    . b e 4 4 4 4 4 4 4 4 4 4 e b . 
+    b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+    b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+    b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+    b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+    b e e e e e e e e e e e e e e b 
+    b e e e e e e e e e e e e e e b 
+    b b b b b b b d d b b b b b b b 
+    c b b b b b b c c b b b b b b c 
+    c c c c c c b c c b c c c c c c 
+    b e e e e e c b b c e e e e e b 
+    b e e e e e e e e e e e e e e b 
+    b c e e e e e e e e e e e e c b 
+    b b b b b b b b b b b b b b b b 
+    . b b . . . . . . . . . . b b . 
+    `, SpriteKind.Objeto)
+cofre.setPosition(randint(0, 300), randint(0, 200))
 controller.moveSprite(hero, 80, 80)
 scene.cameraFollowSprite(hero)
 let idle = animation.createAnimation(ActionKind.Idle, 500)
@@ -219,9 +248,9 @@ animation.attachAnimation(hero, derecha)
 animation.attachAnimation(hero, izquierda)
 animation.attachAnimation(hero, frente)
 animation.attachAnimation(hero, arriba)
-info.setLife(10)
+info.setLife(3)
 game.onUpdate(function () {
-    hero.sayText("" + hero.vx + " , " + hero.vy)
+    hero.sayText("" + cofre.x + " , " + cofre.y)
     if (hero.vx == 0 && hero.vy == 0) {
         animation.setAction(hero, ActionKind.Idle)
     } else if (hero.vx > 0) {
